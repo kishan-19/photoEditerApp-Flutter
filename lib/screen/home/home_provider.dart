@@ -95,7 +95,9 @@ class HomeProvider extends ChangeNotifier {
   }
 
   void delectImage() {
-    isSelect.map((key) => photos.remove(key));
+    for(Map map in isSelect){
+      photos.removeWhere((element) => element['image'] == map['image']);
+    }
     saveData();
     notifyListeners();
   }
