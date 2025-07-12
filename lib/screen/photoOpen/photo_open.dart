@@ -15,6 +15,8 @@ class PhotoOpen extends StatefulWidget {
 }
 
 class _PhotoOpenState extends State<PhotoOpen> {
+
+
   @override
   void initState() {
     super.initState();
@@ -27,7 +29,7 @@ class _PhotoOpenState extends State<PhotoOpen> {
   @override
   Widget build(BuildContext context) {
     final photoFile = context.read<HomeProvider>().photos[widget.photoIndex];
-    final isVisible = context.watch<PhotoOpenProvider>().isVisible;
+    bool isVisible = context.watch<PhotoOpenProvider>().isVisible;
 
     return Scaffold(
       appBar: AppBar(title: const Text('View Photo')),
