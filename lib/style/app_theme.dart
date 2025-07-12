@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:photoediter/export.dart';
 
 class AppTheme{
   Color lightPrimaryColor = Colors.white;

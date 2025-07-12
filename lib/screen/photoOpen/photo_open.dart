@@ -1,9 +1,4 @@
-import 'dart:io';
-
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:photoediter/screen/photoOpen/photo_open_Provider.dart';
-import '../home/home_provider.dart';
+import 'package:photoediter/export.dart';
 
 class PhotoOpen extends StatefulWidget {
   final int photoIndex;
