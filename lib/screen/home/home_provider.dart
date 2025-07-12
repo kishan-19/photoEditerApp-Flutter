@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:photoediter/service/hive_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -48,31 +49,62 @@ class HomeProvider extends ChangeNotifier {
     }
   }
 
-  // Load data when app starts
-  Future<void> loadData() async {
-    final prefs = await SharedPreferences.getInstance();
-    final jsonString = prefs.getString('storedData');
+  //load data to hive
 
-    if (jsonString != null && jsonString.isNotEmpty) {
-      try {
-        final decoded = jsonDecode(jsonString) as List;
-        photos = decoded.map((e) => Map<String, dynamic>.from(e)).toList();
-        notifyListeners();
-        debugPrint("✅ Loaded stored images");
-      } catch (e) {
-        debugPrint("❌ Load failed: $e");
-      }
+  void loadDataToHive(){
+    final raw = HiveService.box.get("mapList");
+
+    if(raw != null){
+      final decoded = jsonDecode(raw);
+      photos =List<Map<String,dynamic>>.from(decoded);
+      notifyListeners();
+      debugPrint("✅ Loaded stored images");
     }
   }
 
+//hive database add data
+//   void addData(Map<String,dynamic> item){
+//       photos.add(item);
+//       saveToHive();
+//   }
+
+  void saveToHive(){
+    final encode = jsonEncode(photos);
+    HiveService.box.put("mapList", encode);
+    notifyListeners();
+  }
+
+  // void clearData() {
+  //   photos.clear();
+  //   _saveToHive();
+  // }
+
+
+  // Load data when app starts
+  // Future<void> loadData() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final jsonString = prefs.getString('storedData');
+  //
+  //   if (jsonString != null && jsonString.isNotEmpty) {
+  //     try {
+  //       final decoded = jsonDecode(jsonString) as List;
+  //       photos = decoded.map((e) => Map<String, dynamic>.from(e)).toList();
+  //       notifyListeners();
+  //       debugPrint("✅ Loaded stored images");
+  //     } catch (e) {
+  //       debugPrint("❌ Load failed: $e");
+  //     }
+  //   }
+  // }
+
 
   // Save data when app is closed
-  Future<void> saveData() async {
-    final prefs = await SharedPreferences.getInstance();
-    final jsonString = jsonEncode(photos);
-    await prefs.setString('storedData', jsonString);
-    debugPrint("💾 Photos saved");
-  }
+  // Future<void> saveData() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final jsonString = jsonEncode(photos);
+  //   await prefs.setString('storedData', jsonString);
+  //   debugPrint("💾 Photos saved");
+  // }
 
 
 //select Images
@@ -98,7 +130,7 @@ class HomeProvider extends ChangeNotifier {
     for(Map map in isSelect){
       photos.removeWhere((element) => element['image'] == map['image']);
     }
-    saveData();
+    // saveData();
     notifyListeners();
   }
 
@@ -153,7 +185,7 @@ class HomeProvider extends ChangeNotifier {
             "mime":dropdownValue,
             "imageName": fileName,
           });
-          saveData();
+          // saveData();
           notifyListeners();
           Navigator.pop(context);
         });
@@ -178,7 +210,7 @@ class HomeProvider extends ChangeNotifier {
             "mime":dropdownValue,
             "imageName": fileName,
           });
-          saveData();
+          // saveData();
           notifyListeners();
           Navigator.pop(context);
         });
@@ -240,7 +272,7 @@ class HomeProvider extends ChangeNotifier {
             "imageName": fileName,
             "mime":dropdownValue
           });
-          saveData();
+          // saveData();
           notifyListeners();
         });
       } else {
@@ -263,7 +295,7 @@ class HomeProvider extends ChangeNotifier {
             "mime":dropdownValue,
             "imageName": fileName,
           });
-          saveData();
+          // saveData();
           notifyListeners();
         });
       }

@@ -15,23 +15,35 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>{
+class _HomeScreenState extends State<HomeScreen>  with WidgetsBindingObserver{
   final _key = GlobalKey<ExpandableFabState>();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    context.read<HomeProvider>().loadData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<HomeProvider>(context, listen: false).loadDataToHive();
+    });
+    WidgetsBinding.instance.addObserver(this);
+    // context.read<HomeProvider>().loadDataToHive();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
+    WidgetsBinding.instance.addObserver(this);
     super.dispose();
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print('AppLifecycleState: $state');
+    if (state == AppLifecycleState.detached || state == AppLifecycleState.inactive || state == AppLifecycleState.paused) {
+      context.read<HomeProvider>().saveToHive();
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
