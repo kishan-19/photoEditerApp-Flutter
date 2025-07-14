@@ -5,6 +5,14 @@ import 'package:photoediter/export.dart';
 
 
 class HomeProvider extends ChangeNotifier {
+
+  static final HomeProvider _instance = HomeProvider._internal();
+
+  factory HomeProvider() {
+    return _instance;
+  }
+  HomeProvider._internal();
+
   File? galleryFile;
   final ImagePicker picker = ImagePicker();
   List<Map<String, dynamic>> photos = [];
@@ -174,7 +182,7 @@ class HomeProvider extends ChangeNotifier {
           photos.removeAt(imageindex);
           photos.insert(imageindex, {
             "image": savedImage.path,
-            "pixels": '${image.width} × ${image.height} pix/${dropdownValue}',
+            "pixels": '${image.width} × ${image.height} pix / ${dropdownValue}',
             "mime":dropdownValue,
             "imageName": fileName,
           });
@@ -199,7 +207,7 @@ class HomeProvider extends ChangeNotifier {
           photos.removeAt(imageindex);
           photos.insert(imageindex, {
             "image": savedImage.path,
-            "pixels": '${image.width} × ${image.height} pix/${dropdownValue}',
+            "pixels": '${image.width} × ${image.height} pix / ${dropdownValue}',
             "mime":dropdownValue,
             "imageName": fileName,
           });
@@ -261,7 +269,7 @@ class HomeProvider extends ChangeNotifier {
           galleryFile = tempImage;
           photos.add({
             "image": savedImage.path,
-            "pixels": '${image.width} × ${image.height} pix/${dropdownValue}',
+            "pixels": '${image.width} × ${image.height} pix / ${dropdownValue}',
             "imageName": fileName,
             "mime":dropdownValue
           });
@@ -284,7 +292,7 @@ class HomeProvider extends ChangeNotifier {
           galleryFile = tempImage;
           photos.add({
             "image": savedImage.path,
-            "pixels": '${image.width} × ${image.height} pix/${dropdownValue}',
+            "pixels": '${image.width} × ${image.height} px / ${dropdownValue}',
             "mime":dropdownValue,
             "imageName": fileName,
           });

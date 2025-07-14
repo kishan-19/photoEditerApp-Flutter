@@ -76,77 +76,80 @@ class _HomeScreenState extends State<HomeScreen>  with WidgetsBindingObserver{
           actionsPadding: EdgeInsets.all(16),
           centerTitle: true,
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Consumer<HomeProvider>(
-              builder: (_, Provider, __) {
-                if (Provider.photos.isEmpty) {
-                  return Center(
-                    child: Text(
-                      "Image not found",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  );
-                } else {
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    itemCount: Provider.photos.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 4,
-                      crossAxisSpacing: 5,
-                      mainAxisSpacing: 5,
-                    ),
-                    itemBuilder: (_, index) {
-                      return GestureDetector(
-                        onLongPress: () {
-                          context.read<HomeProvider>().addSelectValue(index);
-                        },
-                        onTap: () => {
-                          Provider.selectionMode
-                              ? context.read<HomeProvider>().addSelectValue(
-                                  index,
-                                )
-                              : Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        PhotoOpen(photoIndex: index),
-                                  ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Consumer<HomeProvider>(
+            builder: (_, Provider, __) {
+              if (Provider.photos.isEmpty) {
+                return Center(
+                  child: Text(
+                    "Image not found",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                );
+              } else {
+                return GridView.builder(
+                  shrinkWrap: true,
+                  itemCount: Provider.photos.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount:MediaQuery.of(context).orientation == Orientation.portrait ?  4 : 6,
+                    crossAxisSpacing: 5,
+                    mainAxisSpacing: 5,
+                      childAspectRatio:MediaQuery.of(context).orientation == Orientation.portrait ? 0.62 :0.88
+                  ),
+                  itemBuilder: (_, index) {
+                    return GestureDetector(
+                      onLongPress: () {
+                        context.read<HomeProvider>().addSelectValue(index);
+                      },
+                      onTap: () => {
+                        Provider.selectionMode
+                            ? context.read<HomeProvider>().addSelectValue(
+                                index,
+                              )
+                            : Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      PhotoOpen(photoIndex: index),
                                 ),
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Provider.isSelect.map((element)=>element['image']).contains(Provider.photos[index]['image'])
-                                ? Border.all(color: Colors.blue, width: 2)
-                                : null,
-                          ),
-                          child: Stack(
-                            children: [
-                              Image.file(
-                                File(Provider.photos[index]['image']),
-                                fit: BoxFit.cover,
-                                width: 100,
                               ),
-                              Positioned(
-                                bottom: 0,
-                                child: Container(
-                                  width: 80,
-                                  child: Text(
-                                    Provider.photos[index]['pixels'],
-                                    style: TextStyle(color: Colors.red),
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Provider.isSelect.map((element)=>element['image']).contains(Provider.photos[index]['image'])
+                              ? Border.all(color: Colors.blue, width: 2)
+                              : null,
+                        ),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 90,
+                                child: ClipRRect(
+                                  borderRadius:BorderRadiusGeometry.circular(6),
+                                  child: Image.file(
+                                    File(Provider.photos[index]['image']),
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: 118,
                                   ),
                                 ),
+                              ),
+                              Text(
+                                Provider.photos[index]['pixels'],
+                                style: TextStyle(color: Colors.black54,letterSpacing: 0,fontWeight: FontWeight.bold,fontSize: 14),
                               ),
                             ],
                           ),
                         ),
-                      );
-                    },
-                  );
-                }
-              },
-            ),
+                      ),
+                    );
+                  },
+                );
+              }
+            },
           ),
         ),
 
@@ -173,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen>  with WidgetsBindingObserver{
                 },
                 child: Row(
                   spacing: 8,
-                  children: [Text('Camera'), Icon(Icons.camera_alt_outlined)],
+                  children: [Text('Camera'), Icon(Icons.camera_alt_outlined),],
                 ),
               ),
             ),
